@@ -52,12 +52,12 @@ class TakeoffDemoHandler(BaseHandler, AvionicsMixin):
         Make the drone take off.
         :param height: Number of meters to ascend to.
         """
-        print "Taking off!"
+        self.logger.debug('Taking off!')
         self.vehicle().simple_takeoff(height)
 
     def _land(self):
         """
         Land the drone.
         """
-        print "Landing!"
+        self.logger.debug('Landing!')
         self.vehicle().mode = VehicleMode("LAND")

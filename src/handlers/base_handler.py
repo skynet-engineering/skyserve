@@ -1,3 +1,6 @@
+from logger import Logger
+
+
 class BaseHandler(object):
     """
     Base API handler class.
@@ -9,6 +12,13 @@ class BaseHandler(object):
     # response immediately and run the task in the background. Sync endpoint will wait until the
     # run() function completes before returning to the client.
     async = False
+
+    def __init__(self):
+        """
+        Initialize a handler.
+        """
+        # Initialize the logger with the name of the current BaseHandler subclass.
+        self.logger = Logger(self.__class__.__name__)
 
     def run(self, *args, **kwargs):
         """

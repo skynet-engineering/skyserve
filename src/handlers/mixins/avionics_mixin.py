@@ -5,6 +5,10 @@ from threading import Lock
 import dronekit_sitl
 from dronekit import connect
 
+from logger import Logger
+
+logger = Logger('AvionicsMixin')
+
 
 class AvionicsMixin:
     """
@@ -16,74 +20,74 @@ class AvionicsMixin:
     # Lock to linearize the connection initialization
     _connect_lock = Lock()
     # Connection string for the connection to the flight controller.
-    connection_string = os.environ.get("FC_ADDR")
+    connection_string = os.environ.get('FC_ADDR')
     # Software in-the-loop
     sitl = None
 
     @classmethod
-    def ensure_armed(avionics, timeout=30):
+    def ensure_armed(cls, timeout=30):
         """
         Attempt to arm the vehicle. This step should not be performed until a flight
         mode has been selected for the drone.
         :param timeout: A timeout for the vehicle to become armable, in seconds.
         :return: True if drone was already armed or just armed, False otherwise.
         """
-        if avionics.vehicle().armed:
+        if cls.vehicle().armed:
             return True
 
         start_time = time.time()
-        while not avionics._vehicle.is_armable:
-            print "Waiting for drone to become armable..."
+        while not cls._vehicle.is_armable:
+            logger.debug('Waiting for drone to become armable...')
             time.sleep(0.5)
             if time.time() - start_time > timeout:
-                print "Drone could not be armed!"
+                logger.debug('Drone could not be armed!')
                 return False
 
-        print "Arming drone..."
-        avionics._vehicle.armed = True
-        while not (avionics._vehicle.armed):
-            print "Waiting for drone to confirm that it's armed..."
+        logger.debug('Arming drone...')
+        cls._vehicle.armed = True
+        while not cls._vehicle.armed:
+            logger.debug('Waiting for drone to confirm that it\'s armed...')
             time.sleep(0.25)
         return True
 
     @classmethod
-    def vehicle(avionics):
+    def vehicle(cls):
         """
         Getter for the 'vehicle', which exposes an interface for the
         physical drone. If no connection is established to the vehicle, then this
         function guarantees that one will be attempted.
         """
-        if avionics._vehicle is None:
-            avionics.connect_vehicle()
-        return avionics._vehicle
+        if cls._vehicle is None:
+            cls.connect_vehicle()
+        return cls._vehicle
 
     @classmethod
-    def connect_vehicle(avionics):
+    def connect_vehicle(cls):
         """
         Establish a connection with the vehicle's flight controller.
         If no connection string was specified, then assume we're using SITL.
         """
-        avionics._connect_lock.acquire()
+        cls._connect_lock.acquire()
         # If another thread was blocked on the connection initialization lock,
         # let it abort now so we don't repeat work and cause problems.
-        if avionics._vehicle is not None:
-            avionics._connect_lock.release()
+        if cls._vehicle is not None:
+            cls._connect_lock.release()
             return
-        if avionics.connection_string is None:
-            print "No connection string found -- starting SITL!"
-            avionics.sitl = dronekit_sitl.start_default()
-            avionics.connection_string = avionics.sitl.connection_string()
+        if cls.connection_string is None:
+            logger.debug('No connection string found -- starting SITL!')
+            cls.sitl = dronekit_sitl.start_default()
+            cls.connection_string = cls.sitl.connection_string()
 
-        print "Connecting to vehicle at %s..." % avionics.connection_string
-        avionics._vehicle = connect(avionics.connection_string, wait_ready=True)
-        avionics._connect_lock.release()
+        logger.debug('Connecting to vehicle at {}...'.format(cls.connection_string))
+        cls._vehicle = connect(cls.connection_string, wait_ready=True)
+        cls._connect_lock.release()
 
     @classmethod
-    def cleanup(avionics):
+    def cleanup(cls):
         """
         Stop SITL (if started) and close the connection to the vehicle (if opened).
         """
-        if avionics.sitl is not None:
-            avionics.sitl.stop()
-        if avionics._vehicle is not None:
-            avionics._vehicle.close()
+        if cls.sitl is not None:
+            cls.sitl.stop()
+        if cls._vehicle is not None:
+            cls._vehicle.close()

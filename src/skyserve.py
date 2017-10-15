@@ -3,9 +3,13 @@ import threading
 
 from flask import Flask
 from flask import jsonify
+from flask import request
 
 from api_handlers import HANDLERS
 from handlers.base_handler import BaseHandler
+from logger import Logger
+
+logger = Logger(__name__)
 
 
 def init_handlers(app):
@@ -24,14 +28,30 @@ def init_handlers(app):
                  a unique string identifying the handler. Func is the actual function registered to
                  Flask and invoked by the client.
         """
-
         if not issubclass(HandlerClass, BaseHandler):
-            print '[ERROR] {handler_class} is not an instance of BaseHandler! Skipping.'.format(
-                handler_class=HandlerClass.__name__,
+            logger.error(
+                '{handler_class} is not an instance of BaseHandler! Skipping.'.format(
+                    handler_class=HandlerClass.__name__,
+                )
             )
             return None, None, None
 
         handler = HandlerClass()
+
+        def with_tracing(handler_untraced):
+            """
+            Higher-order function to add request/response tracing to an arbitrary handler.
+
+            :param handler_untraced: Untraced handler function.
+            :return: Higher-order function wrapper with request/response log tracing.
+            """
+            def traced_handler():
+                handler.logger.debug('Handler invoked from {ip}'.format(ip=request.remote_addr))
+                ret = handler_untraced()
+                handler.logger.debug('Handler invocation complete')
+                return ret
+
+            return traced_handler
 
         def handler_func():
             """
@@ -60,12 +80,12 @@ def init_handlers(app):
 
             return jsonify(async_task())
 
-        return handler.path, HandlerClass.__name__, handler_func
+        return handler.path, HandlerClass.__name__, with_tracing(handler_func)
 
     for (path, name, func) in map(map_handler_func, HANDLERS):
         if name:
             app.add_url_rule(path, name, func)
-            print '[INFO] Successfully registered {handler_class}'.format(handler_class=name)
+            logger.info('Successfully registered {handler_class}'.format(handler_class=name))
 
     # Catch-all route for routes without a corresponding handler
     @app.errorhandler(404)

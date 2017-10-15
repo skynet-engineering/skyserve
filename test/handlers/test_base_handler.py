@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from handlers.base_handler import BaseHandler
+from src.handlers.base_handler import BaseHandler
 
 
 class TestBaseHandler(TestCase):
@@ -10,6 +10,7 @@ class TestBaseHandler(TestCase):
     def test_class_properties(self):
         self.assertEqual(self.instance.path, '')
         self.assertFalse(self.instance.async)
+        self.assertIsNotNone(self.instance.logger)
 
     def test_run(self):
         self.assertRaises(
