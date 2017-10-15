@@ -24,6 +24,15 @@ $ curl http://localhost:5000/example/sync
 }
 ```
 
+## Configuration
+
+The following environment variables may be set to alter Skyserve's behavior:
+
+* `PORT` - HTTP port listened on by Skyserve.
+* `FC_ADDR` - The address of the flight controller (eg, `tcp:127.0.0.1:6001`). 
+If left unspecified, a "Software In-The-Loop" (SITL) simulator will be used to
+simulate the drone's flight controller.
+
 ## Handlers
 
 To add a new handler,
