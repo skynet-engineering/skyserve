@@ -59,16 +59,20 @@ def init_handlers(app):
 
             :return: Flask JSON object to return to the client.
             """
-            def async_task():
-                data = handler.run()
+            def async_task(json):
+                client_response = handler.run(json)
                 return {
                     'success': True,
                     'async': handler.async,
-                    'data': data,
+                    'data': client_response,
                 }
 
+            # Try to parse out JSON input from the request body, silently falling back to None if
+            # not available.
+            input_data = request.get_json(force=True, silent=True)
+
             if handler.async:
-                thread = threading.Thread(target=async_task, args=())
+                thread = threading.Thread(target=async_task, args=(input_data,))
                 thread.daemon = True
                 thread.start()
                 # Async tasks will ignore the return value of the actual handler logic function
@@ -78,13 +82,18 @@ def init_handlers(app):
                     'data': None,
                 })
 
-            return jsonify(async_task())
+            return jsonify(async_task(input_data))
 
         return handler.path, HandlerClass.__name__, with_tracing(handler_func)
 
     for (path, name, func) in map(map_handler_func, HANDLERS):
         if name:
-            app.add_url_rule(path, name, func)
+            app.add_url_rule(
+                rule=path,
+                endpoint=name,
+                view_func=func,
+                methods=['GET', 'POST'],
+            )
             logger.info('Successfully registered {handler_class}'.format(handler_class=name))
 
     # Catch-all route for routes without a corresponding handler

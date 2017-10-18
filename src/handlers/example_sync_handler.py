@@ -9,7 +9,8 @@ class ExampleSyncHandler(BaseHandler):
     path = '/example/sync'
     async = False
 
-    def run(self, *args, **kwargs):
+    def run(self, input_data, *args, **kwargs):
         return {
             'message': 'Example handler',
+            'input_data': input_data,
         }

@@ -14,11 +14,12 @@ $ PORT=5000 make serve
 Then,
 
 ```
-$ curl http://localhost:5000/example/sync
+$ curl http://localhost:5000/example/sync -d '{"hello": "world"}'
 {
   "async": false,
   "data": {
-    "message": "Example handler"
+    "message": "Example handler",
+    "input_data": {"hello": "world"}
   },
   "success": true
 }
@@ -29,7 +30,7 @@ $ curl http://localhost:5000/example/sync
 The following environment variables may be set to alter Skyserve's behavior:
 
 * `PORT` - HTTP port listened on by Skyserve.
-* `FC_ADDR` - The address of the flight controller (eg, `tcp:127.0.0.1:6001`). 
+* `FC_ADDR` - The address of the flight controller (eg, `tcp:127.0.0.1:6001`).
 If left unspecified, a "Software In-The-Loop" (SITL) simulator will be used to
 simulate the drone's flight controller.
 

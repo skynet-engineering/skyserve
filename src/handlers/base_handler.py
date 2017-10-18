@@ -23,6 +23,8 @@ class BaseHandler(object):
     def run(self, *args, **kwargs):
         """
         Function to run when this endpoint is requested by a client.
+        Non-keyword arguments include:
+            - input_data: JSON-parsed request body from a POST request (if supplied, otherwise None)
 
         :param args: Arbitrary function arguments
         :param kwargs: Arbitrary function keyword arguments
