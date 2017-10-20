@@ -7,7 +7,7 @@ from handlers.mixins.avionics_mixin import AvionicsMixin
 from handlers.base_handler import BaseHandler
 
 # Height to ascend to, in meters.
-_DEMO_HEIGHT = 3
+_DEMO_HEIGHT = 5
 # Time to spend hovering, in meters.
 _DEMO_HOVERTIME = 15
 
