@@ -25,7 +25,7 @@ class MissionProxyHandler(BaseHandler):
         request_func = REQUEST_METHOD_FUNC[flask.request.method]
         skymission_port = os.getenv('SKYMISSION_PORT', 4000)
 
-        url = 'http://127.0.0.1:{skymission_port}{path}'.format(
+        url = 'http://127.0.0.1:{skymission_port}/{path}'.format(
             skymission_port=skymission_port,
             path=mission_url,
         )
