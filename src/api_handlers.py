@@ -1,6 +1,7 @@
 from handlers.discover_handler import DiscoverHandler
 from handlers.example_async_handler import ExampleAsyncHandler
 from handlers.example_sync_handler import ExampleSyncHandler
+from handlers.mission_proxy_handler import MissionProxyHandler
 from handlers.takeoff_demo_handler import TakeoffDemoHandler
 
 
@@ -9,5 +10,6 @@ HANDLERS = [
     DiscoverHandler,
     ExampleAsyncHandler,
     ExampleSyncHandler,
+    MissionProxyHandler,
     TakeoffDemoHandler,
 ]

@@ -45,22 +45,22 @@ def init_handlers(app):
             :param handler_untraced: Untraced handler function.
             :return: Higher-order function wrapper with request/response log tracing.
             """
-            def traced_handler():
+            def traced_handler(*args, **kwargs):
                 handler.logger.debug('Handler invoked from {ip}'.format(ip=request.remote_addr))
-                ret = handler_untraced()
+                ret = handler_untraced(*args, **kwargs)
                 handler.logger.debug('Handler invocation complete')
                 return ret
 
             return traced_handler
 
-        def handler_func():
+        def handler_func(*args, **kwargs):
             """
             Function registered to Flask as the route handler.
 
             :return: Flask JSON object to return to the client.
             """
             def async_task(json):
-                client_response = handler.run(json)
+                client_response = handler.run(json, *args, **kwargs)
                 return {
                     'success': True,
                     'async': handler.async,
