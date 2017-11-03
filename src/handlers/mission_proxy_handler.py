@@ -35,9 +35,10 @@ class MissionProxyHandler(BaseHandler):
                 url=url,
                 headers={
                     'X-Skynet-Source': 'skyserve',
+                    'X-Forwarded-For': flask.request.remote_addr,
                 },
                 json=input_data,
             )
             return resp.json()
         except (ConnectionError, ValueError):
-            return {}
+            return None
