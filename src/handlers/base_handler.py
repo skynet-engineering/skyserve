@@ -13,12 +13,15 @@ class BaseHandler(object):
     # run() function completes before returning to the client.
     async = False
 
-    def __init__(self):
+    def __init__(self, ctx):
         """
         Initialize a handler.
+
+        :param ctx: Global server-side context to expose to all endpoint handlers.
         """
         # Initialize the logger with the name of the current BaseHandler subclass.
         self.logger = Logger(self.__class__.__name__)
+        self.ctx = ctx
 
     def run(self, *args, **kwargs):
         """

@@ -5,10 +5,11 @@ from src.handlers.base_handler import BaseHandler
 
 class TestBaseHandler(TestCase):
     def setUp(self):
-        self.instance = BaseHandler()
+        self.instance = BaseHandler({})
 
     def test_class_properties(self):
         self.assertEqual(self.instance.path, '')
+        self.assertEqual(self.instance.ctx, {})
         self.assertFalse(self.instance.async)
         self.assertIsNotNone(self.instance.logger)
 

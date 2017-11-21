@@ -1,6 +1,5 @@
 import flask
 import requests
-from redis import StrictRedis
 from requests import ConnectionError
 
 from handlers.base_handler import BaseHandler
@@ -19,14 +18,10 @@ class MissionProxyHandler(BaseHandler):
     path = '/mission/<mission_id>/<path:mission_url>'
     async = False
 
-    def __init__(self):
-        super(MissionProxyHandler, self).__init__()
-        self.redis = StrictRedis()
-
     def run(self, input_data, mission_id, mission_url, *args, **kwargs):
         request_func = REQUEST_METHOD_FUNC[flask.request.method]
         key = 'skymission:mission:{mission_id}'.format(mission_id=mission_id)
-        skymission_port = self.redis.get(key)
+        skymission_port = self.ctx.redis.get(key)
 
         if not skymission_port:
             return {

@@ -1,5 +1,3 @@
-from redis import StrictRedis
-
 from handlers.base_handler import BaseHandler
 
 
@@ -15,17 +13,13 @@ class ActiveMissionsHandler(BaseHandler):
     path = '/active-missions'
     async = False
 
-    def __init__(self):
-        super(ActiveMissionsHandler, self).__init__()
-        self.redis = StrictRedis()
-
     def run(self, *args, **kwargs):
         return {
             'missions': [
                 {
                     'mission_id': mission_key[len(SKYMISSION_KEY_PREFIX):],
-                    'port': int(self.redis.get(mission_key))
+                    'port': int(self.ctx.redis.get(mission_key))
                 }
-                for mission_key in self.redis.scan_iter('{}*'.format(SKYMISSION_KEY_PREFIX))
+                for mission_key in self.ctx.redis.scan_iter('{}*'.format(SKYMISSION_KEY_PREFIX))
             ]
         }

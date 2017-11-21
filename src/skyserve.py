@@ -6,9 +6,11 @@ from flask import jsonify
 from flask import request
 
 from api_handlers import HANDLERS
+from context import Context
 from handlers.base_handler import BaseHandler
 from logger import Logger
 
+ctx = Context()
 logger = Logger(__name__)
 
 
@@ -36,7 +38,7 @@ def init_handlers(app):
             )
             return None, None, None
 
-        handler = HandlerClass()
+        handler = HandlerClass(ctx)
 
         def with_tracing(handler_untraced):
             """
@@ -112,7 +114,6 @@ def main():
         host='0.0.0.0',
         port=int(os.environ.get('PORT', 5000)),
         threaded=True,
-        debug=True,
     )
 
 
