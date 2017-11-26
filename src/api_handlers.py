@@ -1,4 +1,5 @@
 from handlers.active_missions_handler import ActiveMissionsHandler
+from handlers.camera_handler import CameraHandler
 from handlers.discover_handler import DiscoverHandler
 from handlers.example_async_handler import ExampleAsyncHandler
 from handlers.example_sync_handler import ExampleSyncHandler
@@ -8,6 +9,7 @@ from handlers.mission_proxy_handler import MissionProxyHandler
 # Every time a new handler is added, add its handler class to the list here.
 HANDLERS = [
     ActiveMissionsHandler,
+    CameraHandler,
     DiscoverHandler,
     ExampleAsyncHandler,
     ExampleSyncHandler,
