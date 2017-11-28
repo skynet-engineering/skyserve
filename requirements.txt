@@ -28,7 +28,6 @@ pymavlink==2.2.5
 pyserial==3.4
 redis==2.10.6
 requests==2.18.4
-scipy==1.0.0
 six==1.11.0
 skyengine==1.3.1
 skynet-picamera==2.0.0
