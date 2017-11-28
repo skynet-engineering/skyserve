@@ -32,6 +32,7 @@ scipy==1.0.0
 six==1.11.0
 skyengine==1.3.1
 skynet-picamera==2.0.0
-skysense==2.2.0
+skysense==2.3.1
+sweeppy==1.3.0
 urllib3==1.22
 Werkzeug==0.12.2
