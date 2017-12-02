@@ -11,5 +11,5 @@ class CameraHandler(BaseHandler):
 
     def run(self, *args, **kwargs):
         return {
-            'image': self.ctx.camera.read(),
+            'image': self.ctx.camera.read() if self.ctx.camera else None,
         }
