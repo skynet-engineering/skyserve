@@ -5,6 +5,7 @@ from redis import StrictRedis
 from skyengine.drone import DroneController
 from skysense.camera import ImageClient
 
+from __init__ import __version__
 from exc import SkyserveException
 from logger import Logger
 
@@ -29,6 +30,9 @@ class Context(object):
 
         # Querying registered mission services
         self.redis = StrictRedis()
+
+        # Skyserve version
+        self.version = __version__
 
         # Verify the instantiated context before continuing
         self._verify_ctx()
