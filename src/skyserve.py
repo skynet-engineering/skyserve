@@ -1,4 +1,3 @@
-import os
 import threading
 
 from flask import Flask
@@ -112,7 +111,7 @@ def main():
     init_handlers(app)
     app.run(
         host='0.0.0.0',
-        port=int(os.environ.get('PORT', 5000)),
+        port=ctx.port,
         threaded=True,
     )
 

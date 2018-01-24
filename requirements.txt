@@ -1,4 +1,5 @@
 aenum==2.0.8
+avahi-client==1.0.0
 certifi==2017.7.27.1
 chardet==3.0.4
 click==6.7
@@ -29,6 +30,7 @@ pyserial==3.4
 redis==2.10.6
 requests==2.18.4
 six==1.11.0
+skycommand==3.0.0
 skyengine==1.3.1
 skynet-picamera==2.0.0
 skysense==2.3.1

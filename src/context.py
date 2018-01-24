@@ -2,6 +2,7 @@ import os
 
 from redis import ConnectionError
 from redis import StrictRedis
+from skycommand import discovery
 from skyengine.drone import DroneController
 from skysense.camera import ImageClient
 
@@ -18,6 +19,9 @@ class Context(object):
     """
 
     def __init__(self):
+        # Port on which the HTTP server should listen
+        self.port = int(os.environ.get('SKYSERVE_PORT', 5000))
+
         # Skyengine instance to interface with the drone.
         self.drone = DroneController(os.environ.get('FC_ADDR'))
 
@@ -33,6 +37,9 @@ class Context(object):
 
         # Skyserve version
         self.version = __version__
+
+        # Publish this Skyserve instance to the network for discovery
+        discovery.publish_drone(port=self.port)
 
         # Verify the instantiated context before continuing
         self._verify_ctx()
