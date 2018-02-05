@@ -13,6 +13,7 @@ class FlightStatusHandler(BaseHandler):
         location = self.ctx.drone.vehicle.location.global_relative_frame
         airspeed = self.ctx.drone.vehicle.airspeed
         heading = self.ctx.drone.vehicle.heading
+        battery = self.ctx.drone.read_battery_status()
         status = self.ctx.drone.status.name
         mode = self.ctx.drone.vehicle.mode.name
 
@@ -24,6 +25,7 @@ class FlightStatusHandler(BaseHandler):
             'alt': location.alt,
             'airspeed': airspeed,
             'heading': heading,
+            'battery': battery.voltage,
             'status': status,
             'mode': mode,
         }
