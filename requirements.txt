@@ -1,6 +1,6 @@
 aenum==2.0.8
-avahi-client==1.0.0
-certifi==2017.7.27.1
+avahi-client==1.0.2
+certifi==2018.1.18
 chardet==3.0.4
 click==6.7
 configparser==3.5.0
@@ -11,7 +11,7 @@ flake8==3.4.1
 Flask==0.12.2
 Flask-Testing==0.6.2
 funcsigs==1.0.2
-future==0.15.2
+future==0.16.0
 idna==2.6
 itsdangerous==0.24
 Jinja2==2.9.6
@@ -20,6 +20,7 @@ MarkupSafe==1.0
 mccabe==0.6.1
 mock==2.0.0
 monotonic==1.2
+netifaces==0.10.6
 numpy==1.13.3
 pbr==3.1.1
 psutil==5.4.3
@@ -30,8 +31,8 @@ pyserial==3.4
 redis==2.10.6
 requests==2.18.4
 six==1.11.0
-skycommand==3.0.0
-skyengine==1.5.0
+skycommand==3.0.3
+skyengine==2.0.0
 skynet-picamera==2.0.0
 skysense==2.3.1
 sweeppy==1.3.0
