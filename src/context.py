@@ -13,6 +13,34 @@ from logger import Logger
 logger = Logger(__name__)
 
 
+class CameraFactory(object):
+    """
+    Context manager for creating and destroying a Pi camera client only when it is needed.
+    """
+
+    def __init__(self, *args, **kwargs):
+        """
+        Pass all arguments and keyword arguments transparently to the ImageClient.
+        """
+        self.client_args = args
+        self.client_kwargs = kwargs
+
+    def __enter__(self):
+        """
+        Obtain exclusive use of the camera when an image needs to be captured.
+
+        :return: ImageClient for taking static photos from the camera.
+        """
+        self.camera = ImageClient(*self.client_args, **self.client_kwargs)
+        return self.camera
+
+    def __exit__(self, *args):
+        """
+        Release the exclusivity held on the camera so that other processes may use it.
+        """
+        self.camera.close()
+
+
 class Context(object):
     """
     Global server-side context initialized with all clients relevant to endpoint handlers.
@@ -26,11 +54,7 @@ class Context(object):
         self.drone = DroneController(os.environ.get('FC_ADDR'))
 
         # Capturing images from the Pi camera, if available
-        try:
-            self.camera = ImageClient(resolution=(1280, 720))
-        except Exception:
-            logger.warn('Camera hardware not available! Skipping camera initialization.')
-            self.camera = None
+        self.camera_factory = CameraFactory
 
         # Querying registered mission services
         self.redis = StrictRedis()
